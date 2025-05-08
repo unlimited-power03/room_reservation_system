@@ -1,0 +1,3 @@
+# Ignore files with essential data
+.env
+config.env
