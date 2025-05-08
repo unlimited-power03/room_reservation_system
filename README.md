@@ -12,4 +12,4 @@ Application for reserving room. Owner can add and edit rooms.  User can make res
 - C++ / Qt
 - PostgreSQL
 
-
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
