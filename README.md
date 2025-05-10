@@ -14,7 +14,7 @@ Desktop application for reserving room. Owner can add and edit rooms.  User can 
 - C++ / Qt
 - PostgreSQL
 
-#Where to place config.env
+# Where to place config.env
 Place it into build/...-Debug directory
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
