@@ -120,14 +120,6 @@ void login::on_login_to_account_clicked()
 
 void login::on_sign_in_clicked()
 {
-    /*sign_in *signIn = nullptr;
-    if(signIn != nullptr){
-        delete signIn;
-    }
-    this->hide();
-    signIn = new sign_in;
-    signIn -> show();*/
-    //if(signInGui!=nullptr){/*signInGui -> deleteLater();*/ signInGui = nullptr;}
     signInGui = new sign_in;
     signInGui->setLoginGui(this);
     this->hide();
@@ -138,7 +130,6 @@ void login::on_sign_in_clicked()
 
 void login::on_exit_clicked()
 {
-    //conn_to_db.closeConnectionToDb();
     this->close();
 }
 

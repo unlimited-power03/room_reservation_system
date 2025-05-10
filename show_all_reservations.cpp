@@ -34,6 +34,11 @@ void showAllReservations::setFilters(){
     for(QString &email : reservationObj_showAllReservations.getFilterForUserEmail()){
         ui->email_filter->addItem(email);
     }
+
+    ui->start_day_filter->setDate(QDate::currentDate());
+    ui->end_date_filter->setDate(QDate::currentDate().addDays(1));
+    ui->start_day_filter->setCalendarPopup(true);
+    ui->end_date_filter->setCalendarPopup(true);
 }
 
 void showAllReservations::showAllReservationsTable(){
@@ -61,8 +66,7 @@ void showAllReservations::showAllReservationsTable(){
         ui->tableWidget->setItem(i, 4, user_email);
         ui->tableWidget->setItem(i, 5, start_date);
         ui->tableWidget->setItem(i, 6, end_date);
-        if(data.getBeginOfReservation() <= QDate::currentDate().addDays(1) || (QDate::currentDate() >= data.getBeginOfReservation()
-            && QDate::currentDate()<= data.getEndOfReservation()) || data.getEndOfReservation() <= QDate::currentDate()){
+        if(!(data.getBeginOfReservation() <= QDate::currentDate().addDays(1) || data.getEndOfReservation() <= QDate::currentDate())){
                 QPushButton *cancelReservationButton = new QPushButton("Cancel",this);
                 connect(cancelReservationButton, &QPushButton::clicked, this, [=](){onClickedCancelReservationButton(i);});
                 ui->tableWidget->setCellWidget(i,7, cancelReservationButton);
@@ -149,6 +153,16 @@ void showAllReservations::on_submit_button_clicked()
             QPushButton *cancelReservationButton = new QPushButton("Cancel",this);
             connect(cancelReservationButton, &QPushButton::clicked, this, [=](){onClickedCancelReservationButton(i);});
             ui->tableWidget->setCellWidget(i,7, cancelReservationButton);
+        }
+        if(QDate::currentDate() >= data.getBeginOfReservation() && QDate::currentDate()<= data.getEndOfReservation()){
+            for(int col=0; col<ui->tableWidget->columnCount(); col++){
+                QTableWidgetItem *item = ui->tableWidget->item(i,col);
+                if (!item) {
+                    item = new QTableWidgetItem();
+                    ui->tableWidget->setItem(i, col, item);
+                }
+                item->setBackground(QColor(144, 238, 144));
+            }
         }
     }
 }

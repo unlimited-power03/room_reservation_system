@@ -7,7 +7,6 @@
 #include "user_password_data.h"
 #include "owner_password_data.h"
 #include "session_manager.h"
-#include "connection_do_db.h"
 
 namespace Ui {
 class login;
@@ -47,7 +46,6 @@ private:
     userGui* user_gui;
     ownerGui* owner_gui;
     sign_in *signInGui;
-    connection_do_db conn_to_db;
 
 };
 

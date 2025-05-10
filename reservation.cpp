@@ -28,15 +28,19 @@ void reservation::setReservationID(int reservation_id){
 QVector<reservation> reservation::getAllReservationData(){
     QVector<reservation> general_data;
     QSqlQuery query;
-    query.prepare("SELECT reservation.id, room.name, users.first_name, users.surname, users.email, begin_date, end_date FROM reservation INNER JOIN room ON room.id = reservation.room_id INNER JOIN users ON reservation.user_id = users.id");
+    query.prepare("SELECT reservation.id, room.name, users.first_name, users.surname, users.email, begin_date, end_date FROM reservation LEFT JOIN room ON room.id = reservation.room_id LEFT JOIN users ON reservation.user_id = users.id");
     query.exec();
     while(query.next()){
         reservation tmp;
         tmp.id = query.value(0).toInt();
-        tmp.roomObj_reservation.setRoomName(query.value(1).toString());
-        tmp.userdataObj_reservation.setFirstName(query.value(2).toString());
-        tmp.userdataObj_reservation.setSurname(query.value(3).toString());
-        tmp.userdataObj_reservation.setEmail(query.value(4).toString());
+        QString room_name = query.value(1).toString();
+        tmp.roomObj_reservation.setRoomName(room_name.isEmpty() ? "deleted" : room_name);
+        QString user_first_name = query.value(2).toString();
+        tmp.userdataObj_reservation.setFirstName(user_first_name.isEmpty() ? "deleted" : user_first_name);
+        QString user_surname = query.value(3).toString();
+        tmp.userdataObj_reservation.setSurname(user_surname.isEmpty() ? "deleted" : user_surname);
+        QString user_email = query.value(4).toString();
+        tmp.userdataObj_reservation.setEmail(user_email.isEmpty() ? "deleted" : user_email);
         tmp.begin_date = query.value(5).toDate();
         tmp.end_date = query.value(6).toDate();
         general_data.append(tmp);
@@ -217,13 +221,14 @@ QVector<reservation> reservation::getUserReservation(int user_id){
     QVector<reservation> user_data;
     QSqlQuery query;
     query.prepare("SELECT reservation.id, room.name, begin_date, end_date FROM reservation "
-                  "INNER JOIN room ON room.id = reservation.room_id WHERE reservation.user_id = :user_id");
+                  "LEFT JOIN room ON room.id = reservation.room_id WHERE reservation.user_id = :user_id");
     query.bindValue(":user_id",user_id);
     query.exec();
     while(query.next()){
         reservation tmp;
         tmp.id = query.value(0).toInt();
-        tmp.roomObj_reservation.setRoomName(query.value(1).toString());
+        QString room_name = query.value(1).toString();
+        tmp.roomObj_reservation.setRoomName(room_name.isEmpty() ? "deleted" : room_name);
         tmp.begin_date = query.value(2).toDate();
         tmp.end_date = query.value(3).toDate();
         user_data.append(tmp);

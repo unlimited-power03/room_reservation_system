@@ -17,6 +17,11 @@ showUserReservations::showUserReservations(QWidget *parent)
         ui->room_filter->addItem(room);
     }
 
+    ui->start_day_filter->setDate(QDate::currentDate());
+    ui->end_date_filter->setDate(QDate::currentDate().addDays(1));
+    ui->start_day_filter->setCalendarPopup(true);
+    ui->end_date_filter->setCalendarPopup(true);
+
     showTable();
 }
 
@@ -42,15 +47,24 @@ void showUserReservations::showTable(){
         ui->tableWidget->setItem(i, 2, start_date);
         ui->tableWidget->setItem(i, 3, end_date);
 
-        if(/*data.getBeginOfReservation() <= QDate::currentDate().addDays(1) || (QDate::currentDate() >= data.getBeginOfReservation()
-            &&  QDate::currentDate()<= data.getEndOfReservation()) || data.getEndOfReservation() <= QDate::currentDate()*/
-            !(data.getBeginOfReservation() <= QDate::currentDate().addDays(1) || data.getEndOfReservation() <= QDate::currentDate())){
+        if(!(data.getBeginOfReservation() <= QDate::currentDate().addDays(1) || data.getEndOfReservation() <= QDate::currentDate())){
             QPushButton *editReservationButton = new QPushButton("Edit",this);
             connect(editReservationButton, &QPushButton::clicked, this, [=](){onClickedEditReservationButton(i);});
             ui->tableWidget->setCellWidget(i,4, editReservationButton);
             QPushButton *cancelReservationButton = new QPushButton("Cancel",this);
             connect(cancelReservationButton, &QPushButton::clicked, this, [=](){onClickedCancelReservationButton(i);});
             ui->tableWidget->setCellWidget(i,5, cancelReservationButton);
+        }
+
+        if(QDate::currentDate() >= data.getBeginOfReservation() && QDate::currentDate()<= data.getEndOfReservation()){
+            for(int col=0; col<ui->tableWidget->columnCount(); col++){
+                QTableWidgetItem *item = ui->tableWidget->item(i,col);
+                if (!item) {
+                    item = new QTableWidgetItem();
+                    ui->tableWidget->setItem(i, col, item);
+                }
+                item->setBackground(QColor(144, 238, 144));
+            }
         }
     }
 }
